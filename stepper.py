@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # control a stepper motor from RasPi with Adafruit TB6612 driver
 # 4/15/18
-# updated 4/27/18
+# update 7/1/18
 
 import logging
 from time import sleep
@@ -42,19 +42,16 @@ class Stepper:
         '''initialize the driver generator object'''
         driver = self._driver()
         driver.send(None)
-
         return driver
 
     def _sequencer(self):
         '''infinite generator to loop through the step phases'''
-
         while True:
             for phase in self.phases[self.direction]:
                 yield phase
 
     def _step(self, phase):
         '''ingest the step phase and turn output pins on or off accordingly'''
-
         for i in range(len(self.step_pins)):
             self.step_pins[i].on() if phase[i] else self.step_pins[i].off()
 
@@ -63,7 +60,6 @@ class Stepper:
         generator object for controlling the stepper motor.
         pause values are passed in via send() in the step() method.
         '''
-
         for phase in self._sequencer():
             pause = yield
             self._step(phase)
@@ -81,7 +77,6 @@ class Stepper:
         the non-generator object way to step the stepper which needs to be called
         in an external loop. it's just here for reference, will probably be removed in the near future.
         '''
-
         for phase in self.phases:
             self._step(phase)
             sleep(pause)
